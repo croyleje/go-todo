@@ -1,5 +1,5 @@
-run/todo:
+run:
 	@go run ./cmd/todo
 
-build/todo:
+build:
 	@go build ./cmd/todo
