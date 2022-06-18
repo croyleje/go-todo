@@ -15,7 +15,7 @@ type item struct {
 	Task        string
 	Done        bool
 	CreatedAt   time.Time
-	CompletedAt time.Time
+	CompletedAt string
 }
 
 type Todos []item
@@ -26,7 +26,7 @@ func (t *Todos) Add(task string) {
 		Task:        task,
 		Done:        false,
 		CreatedAt:   time.Now(),
-		CompletedAt: time.Time{},
+		CompletedAt: "Pending",
 	}
 
 	*t = append(*t, todo)
@@ -40,7 +40,9 @@ func (t *Todos) Complete(index int) error {
 		return errors.New("invalid index")
 	}
 
-	ls[index-1].CompletedAt = time.Now()
+	// {Text: item.CompletedAt.Format(time.RFC822)},
+	// ls[index-1].CompletedAt = time.Time.String(time.Now())
+	ls[index-1].CompletedAt = time.Now().Format(time.RFC822)
 	ls[index-1].Done = true
 
 	return nil
@@ -111,16 +113,25 @@ func (t *Todos) Print() {
 
 	for idx, item := range *t {
 		idx++
+
 		task := blue(item.Task)
 		if item.Done {
 			task = green(fmt.Sprintf("\u2705 %s", item.Task))
 		}
+
+		complete := green(item.CompletedAt)
+		if item.Done == false {
+			red(item.CompletedAt)
+			complete = red("Pending")
+		}
+
 		cells = append(cells, *&[]*simpletable.Cell{
 			{Text: fmt.Sprintf("%d", idx)},
 			{Text: task},
 			{Text: fmt.Sprintf("%t", item.Done)},
 			{Text: item.CreatedAt.Format(time.RFC822)},
-			{Text: item.CompletedAt.Format(time.RFC822)},
+			{Text: complete},
+			// {Text: item.CompletedAt.Format(time.RFC822)},
 		})
 	}
 

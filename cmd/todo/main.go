@@ -12,8 +12,31 @@ import (
 )
 
 const (
-	todofile = ".todos.json"
+	directory = "/go-todo"
 )
+
+var (
+	todofile = "/todos.json"
+)
+
+func chkFileExists(filePath string) bool {
+	_, error := os.Stat(filePath)
+	//return !os.IsNotExist(err)
+	return !errors.Is(error, os.ErrNotExist)
+}
+
+func init() {
+	configDir, _ := os.UserConfigDir()
+	todofileFullPath := configDir + directory + todofile
+
+	if chkFileExists(todofileFullPath) == false {
+		os.Mkdir(configDir+directory, 0766)
+		os.Create(todofileFullPath)
+	}
+
+	todofile = todofileFullPath
+
+}
 
 func main() {
 
