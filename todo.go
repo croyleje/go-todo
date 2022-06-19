@@ -40,7 +40,6 @@ func (t *Todos) Complete(index int) error {
 		return errors.New("invalid index")
 	}
 
-	// {Text: item.CompletedAt.Format(time.RFC822)},
 	// ls[index-1].CompletedAt = time.Time.String(time.Now())
 	ls[index-1].CompletedAt = time.Now().Format(time.RFC822)
 	ls[index-1].Done = true
@@ -116,13 +115,12 @@ func (t *Todos) Print() {
 
 		task := blue(item.Task)
 		if item.Done {
-			task = green(fmt.Sprintf("\u2705 %s", item.Task))
+			task = green(item.Task)
 		}
 
-		complete := green(item.CompletedAt)
+		complete := item.CompletedAt
 		if item.Done == false {
-			red(item.CompletedAt)
-			complete = red("Pending")
+			complete = "Pending"
 		}
 
 		cells = append(cells, *&[]*simpletable.Cell{
@@ -130,8 +128,8 @@ func (t *Todos) Print() {
 			{Text: task},
 			{Text: fmt.Sprintf("%t", item.Done)},
 			{Text: item.CreatedAt.Format(time.RFC822)},
-			{Text: complete},
 			// {Text: item.CompletedAt.Format(time.RFC822)},
+			{Text: complete},
 		})
 	}
 
