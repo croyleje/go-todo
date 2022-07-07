@@ -94,8 +94,10 @@ func main() {
 	case *list:
 		todos.Print()
 	default:
-		fmt.Fprintln(os.Stdout, "invalid command")
-		os.Exit(0)
+		todos.Print()
+		// default:
+		// 	fmt.Fprintln(os.Stdout, "invalid command")
+		// 	os.Exit(0)
 	}
 
 }
